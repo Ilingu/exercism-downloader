@@ -1,8 +1,10 @@
 # Exercism Downloader TUI 🐚
 
+#### Little TUI/CLI written in Go, that automate the task of downloading an exercism exercise and then open it with vscode at the right path.
+
 ## Purpose 👀
 
-#### Little TUI/CLI written in Go, that automate the task of downloading an exercism exercise and then open it with vscode at the right path.
+It's my first TUI app, so I wanted something simple but complete (go will just execute commands under the hood...)
 
 ## Install
 
