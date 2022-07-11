@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"time"
@@ -15,7 +16,10 @@ import (
 var mainProgram *tea.Program
 
 func main() {
-	mainProgram = tea.NewProgram(initMainModel())
+	InitialName := flag.String("n", "", "The exercism name")
+	flag.Parse()
+
+	mainProgram = tea.NewProgram(initMainModel(*InitialName))
 	if err := mainProgram.Start(); err != nil {
 		log.Fatalf("Alas, there's been an error: %v", err)
 	}
@@ -31,15 +35,17 @@ type mainModel struct {
 	err          error
 }
 
-func initMainModel() mainModel {
+func initMainModel(InitialName string) mainModel {
 	// Input
 	ti := textinput.New()
 	ti.Placeholder = "Crypto Square"
 	ti.PlaceholderStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#635111"))
 	ti.PromptStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#f9ca24"))
 	ti.TextStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#874BFD")).Bold(true)
-	ti.Width = 30
+	ti.Width = 50
+
 	ti.Focus()
+	ti.SetValue(InitialName)
 
 	return mainModel{exercismName: ti}
 }
