@@ -96,7 +96,7 @@ func (m mainModel) View() string {
 		return ""
 	}
 
-	var HeaderStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#0000FF")).
+	var HeaderStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#6366f1")).
 		PaddingRight(2).PaddingLeft(2).Underline(true)
 
 	var EscapeStyle = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.AdaptiveColor{Light: "#D9DCCF", Dark: "#383838"})

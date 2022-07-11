@@ -16,7 +16,7 @@ func parseInput(inp string) (string, error) {
 	inp = strings.ToLower(inp)
 
 	ExercismId := inp
-	re := regexp.MustCompile("exercism download --exercise=([a-zA-Z]+-[a-zA-Z]+)+ --track=go")
+	re := regexp.MustCompile("exercism download --exercise=([a-zA-Z]+(-[a-zA-Z]+)+) --track=go")
 	isLink := re.MatchString(ExercismId)
 
 	if isLink {
