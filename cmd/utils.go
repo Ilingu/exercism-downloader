@@ -21,10 +21,17 @@ func parseInput(inp string) (string, error) {
 
 	if isLink {
 		IdFound := re.FindStringSubmatch(ExercismId)
-		if len(IdFound) < 1 || len(strings.TrimSpace(IdFound[1])) <= 0 {
+		if len(IdFound) < 4 {
 			return "", errors.New("cannot exctract exercism name from this link")
 		}
-		ExercismId = IdFound[1]
+
+		if len(strings.TrimSpace(IdFound[1])) > 0 {
+			ExercismId = IdFound[1]
+		} else if len(strings.TrimSpace(IdFound[2])) > 0 {
+			ExercismId = IdFound[2]
+		} else {
+			return "", errors.New("cannot exctract exercism name from this link")
+		}
 	} else {
 		ExercismId = strings.ReplaceAll(ExercismId, " ", "-")
 	}
