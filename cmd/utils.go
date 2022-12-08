@@ -2,10 +2,16 @@ package main
 
 import (
 	"errors"
+	subresult "exercism-cli/cmd/subs/result"
 	"regexp"
 	"strings"
 	"unicode"
 )
+
+func PushMessage(msg string, isErr bool) {
+	NewResponse := subresult.ResultSubProgram{Model: subresult.ResultModel{Result: msg, IsError: isErr}}
+	go NewResponse.SpawnResultSubProgram() // Render result to ui
+}
 
 // parse
 func parseInput(inp string) (string, error) {

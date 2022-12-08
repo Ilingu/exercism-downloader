@@ -8,35 +8,47 @@ import (
 	"strings"
 	"time"
 
-	subresult "exercism-cli/cmd/subs/result"
-
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 // Recommanded to call this function in a go routines, it will downloads the exercism to the user local system (if exercism cli is configured) and will then open it in vscodium
 func DownloadAndOpenExcerism(exercismName string) {
-	SendResponse := func(res string, isErr bool) {
-		NewResponse := subresult.ResultSubProgram{Model: subresult.ResultModel{Result: res, IsError: isErr}}
-
-		go NewResponse.SpawnResultSubProgram() // Render result to ui
+	SendFinalResponse := func(res string, isErr bool) {
+		go PushMessage(res, isErr)
 		time.Sleep(2 * time.Second)
-
 		mainProgram.Quit() // Quit main program
 	}
 
 	dlPath, err := DownloadExercism(exercismName)
 	if err != nil {
-		SendResponse("failed to download exercism", true)
+		SendFinalResponse("failed to download exercism", true)
 		return
 	}
+
+	var try uint
+	for {
+		if try >= 5 {
+			SendFinalResponse("failed to download exercism", true)
+			return
+		}
+
+		if _, err := os.Stat(dlPath); err == nil {
+			break
+		}
+
+		try++
+		go PushMessage("Folder not created yet, backing up 1s...", true)
+		time.Sleep(1 * time.Second)
+	}
+	go PushMessage(fmt.Sprintf("%s downloaded, opening it...", exercismName), false)
 
 	err = OpenEditor(dlPath)
 	if err != nil {
-		SendResponse("failed to open editor", true)
+		SendFinalResponse("failed to open editor", true)
 		return
 	}
 
-	SendResponse("operation terminate successfully", false)
+	SendFinalResponse("operation terminate successfully", false)
 }
 
 func DownloadExercism(exercismName string) (string, error) {
@@ -46,7 +58,7 @@ func DownloadExercism(exercismName string) (string, error) {
 		return "", err
 	}
 
-	return dlPath, nil
+	return strings.TrimSpace(dlPath), nil
 }
 
 func OpenEditor(dlPath string) error {
